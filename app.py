@@ -2,6 +2,7 @@ import os
 from PIL import Image
 import numpy as np
 from fpdf import FPDF
+import tempfile
 
 def calculate_brightness(image):
     grayscale_image = image.convert('L')
@@ -13,9 +14,6 @@ def calculate_saturation(image):
     np_image = np.array(hsv_image)
     saturation = np_image[:, :, 1] 
     return np.mean(saturation)
-
-def create_thumbnail(image, size=(100, 100)):
-    return image.copy().thumbnail(size)
 
 def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness'):
     images = []
@@ -43,10 +41,16 @@ def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness'):
     x_offset, y_offset = margin, margin
 
     for i, (metric, image, filename) in enumerate(images):
-        thumbnail = image.copy()
-        thumbnail.thumbnail(thumbnail_size)
-        pdf.image(thumbnail.filename, x=x_offset, y=y_offset, w=thumbnail_size[0], h=thumbnail_size[1])
-        
+        # Создаем временный файл для миниатюры
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
+            temp_filename = temp_file.name
+            thumbnail = image.copy()
+            thumbnail.thumbnail(thumbnail_size)
+            thumbnail.save(temp_filename)
+
+            # Добавляем изображение в PDF
+            pdf.image(temp_filename, x=x_offset, y=y_offset, w=thumbnail_size[0], h=thumbnail_size[1])
+
         x_offset += thumbnail_size[0] + margin
         if (i + 1) % images_per_row == 0:
             x_offset = margin
@@ -56,10 +60,12 @@ def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness'):
             pdf.add_page()
             x_offset, y_offset = margin, margin
 
+        os.remove(temp_filename)
+
     pdf.output(output_pdf)
 
 image_folder = 'images_folder'  
 output_pdf = 'sorted_images.pdf'
-sort_by = input("Choose parameter of sorting (brightness/saturation): ").strip().lower()
+sort_by = input("Choose sort parameter (brightness/saturation): ").strip().lower()
 
 create_sorted_pdf(image_folder, output_pdf, sort_by=sort_by)
