@@ -5,17 +5,17 @@ from fpdf import FPDF
 import tempfile
 
 def calculate_brightness(image):
-    grayscale_image = image.convert('L')
-    np_image = np.array(grayscale_image)
-    return np.mean(np_image)
+    grayscale_image = image.convert('L') # image in gray
+    np_image = np.array(grayscale_image) # convert to massive
+    return np.mean(np_image) # return brightness
 
 def calculate_saturation(image):
-    hsv_image = image.convert('HSV')
+    hsv_image = image.convert('HSV') # convert to HSV model
     np_image = np.array(hsv_image)
-    saturation = np_image[:, :, 1] 
+    saturation = np_image[:, :, 1] # convert to massive
     return np.mean(saturation)
 
-def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness'):
+def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness', max_width=200, max_height=200):
     images = []
     for filename in os.listdir(image_folder):
         if filename.lower().endswith(('png', 'jpg', 'jpeg')):
@@ -26,46 +26,46 @@ def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness'):
                 metric = calculate_brightness(image)
             elif sort_by == 'saturation':
                 metric = calculate_saturation(image)
+            else:
+                print(f"Invalid sort parameter '{sort_by}'. Defaulting to brightness.")
+                metric = calculate_brightness(image)
             
-            images.append((metric, image, filename))
-    
+            images.append((metric, image_path))
+
     images.sort(reverse=True, key=lambda x: x[0])
 
     pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.set_auto_page_break(auto=True, margin=5)
     pdf.add_page()
 
-    thumbnail_size = (100, 100)
-    margin = 10
-    images_per_row = 4
-    x_offset, y_offset = margin, margin
+    margin = 1
+    y_offset = margin
 
-    for i, (metric, image, filename) in enumerate(images):
-        # Создаем временный файл для миниатюры
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
-            temp_filename = temp_file.name
-            thumbnail = image.copy()
-            thumbnail.thumbnail(thumbnail_size)
-            thumbnail.save(temp_filename)
-
-            # Добавляем изображение в PDF
-            pdf.image(temp_filename, x=x_offset, y=y_offset, w=thumbnail_size[0], h=thumbnail_size[1])
-
-        x_offset += thumbnail_size[0] + margin
-        if (i + 1) % images_per_row == 0:
-            x_offset = margin
-            y_offset += thumbnail_size[1] + margin
+    for i, (metric, image_path) in enumerate(images):
+        image = Image.open(image_path)
+        original_width, original_height = image.size
         
-        if y_offset > pdf.page_break_trigger - 20:
-            pdf.add_page()
-            x_offset, y_offset = margin, margin
+        scale = min(max_width / original_width, max_height / original_height)
+        new_width = int(original_width * scale)
+        new_height = int(original_height * scale)
 
-        os.remove(temp_filename)
+        page_width = pdf.w - 2 * margin
+        x_offset = (page_width - new_width) / 2
+
+        if y_offset + new_height > pdf.page_break_trigger - 5:
+            pdf.add_page()
+            y_offset = margin
+
+        pdf.image(image_path, x=x_offset, y=y_offset, w=new_width, h=new_height)
+        
+        y_offset += new_height + margin
 
     pdf.output(output_pdf)
 
 image_folder = 'images_folder'  
 output_pdf = 'sorted_images.pdf'
+
 sort_by = input("Choose sort parameter (brightness/saturation): ").strip().lower()
 
 create_sorted_pdf(image_folder, output_pdf, sort_by=sort_by)
+
