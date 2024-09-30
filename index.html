@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sort Images and Create PDF</title>
+</head>
+<body>
+    <h2>Upload Images Folder</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="images">Select images to upload:</label>
+        <input type="file" id="images" name="images" multiple webkitdirectory directory>
+        <br><br>
+        <label for="sort_by">Sort by:</label>
+        <select id="sort_by" name="sort_by">
+            <option value="brightness">Brightness</option>
+            <option value="saturation">Saturation</option>
+        </select>
+        <br><br>
+        <button type="submit">Upload and Create PDF</button>
+    </form>
+</body>
+</html>

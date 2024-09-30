@@ -1,18 +1,21 @@
+from flask import Flask, request, send_file, render_template_string
 import os
 from PIL import Image
 import numpy as np
 from fpdf import FPDF
 import tempfile
 
+app = Flask(__name__)
+
 def calculate_brightness(image):
-    grayscale_image = image.convert('L') # image in gray
-    np_image = np.array(grayscale_image) # convert to massive
-    return np.mean(np_image) # return brightness
+    grayscale_image = image.convert('L')
+    np_image = np.array(grayscale_image)
+    return np.mean(np_image)
 
 def calculate_saturation(image):
-    hsv_image = image.convert('HSV') # convert to HSV model
+    hsv_image = image.convert('HSV')
     np_image = np.array(hsv_image)
-    saturation = np_image[:, :, 1] # convert to massive
+    saturation = np_image[:, :, 1]
     return np.mean(saturation)
 
 def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness', max_width=200, max_height=200):
@@ -20,17 +23,21 @@ def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness', max_width=
     for filename in os.listdir(image_folder):
         if filename.lower().endswith(('png', 'jpg', 'jpeg')):
             image_path = os.path.join(image_folder, filename)
-            image = Image.open(image_path)
-            
-            if sort_by == 'brightness':
-                metric = calculate_brightness(image)
-            elif sort_by == 'saturation':
-                metric = calculate_saturation(image)
-            else:
-                print(f"Invalid sort parameter '{sort_by}'. Defaulting to brightness.")
-                metric = calculate_brightness(image)
-            
-            images.append((metric, image_path))
+            try:
+                image = Image.open(image_path)
+                
+                if sort_by == 'brightness':
+                    metric = calculate_brightness(image)
+                elif sort_by == 'saturation':
+                    metric = calculate_saturation(image)
+                
+                images.append((metric, image_path))
+            except (IOError, FileNotFoundError):
+                print(f"Skipped invalid file: {filename}")
+
+    if not images:
+        print("No valid images found.")
+        return
 
     images.sort(reverse=True, key=lambda x: x[0])
 
@@ -62,10 +69,26 @@ def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness', max_width=
 
     pdf.output(output_pdf)
 
-image_folder = 'images_folder'  
-output_pdf = 'sorted_images.pdf'
+@app.route('/')
+def index():
+    return render_template_string(open('index.html').read())
 
-sort_by = input("Choose sort parameter (brightness/saturation): ").strip().lower()
+@app.route('/upload', methods=['POST'])
+def upload_files():
+    if 'images' not in request.files:
+        return "No file part"
+    
+    images = request.files.getlist('images')
+    sort_by = request.form.get('sort_by', 'brightness')
 
-create_sorted_pdf(image_folder, output_pdf, sort_by=sort_by)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        for img in images:
+            img.save(os.path.join(temp_dir, img.filename))
 
+        output_pdf = os.path.join(temp_dir, 'sorted_images.pdf')
+        create_sorted_pdf(temp_dir, output_pdf, sort_by=sort_by)
+
+        return send_file(output_pdf, as_attachment=True, download_name='sorted_images.pdf')
+
+if __name__ == "__main__":
+    app.run(debug=True)
