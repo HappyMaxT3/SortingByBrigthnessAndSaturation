@@ -1,94 +1,84 @@
-from flask import Flask, request, send_file, render_template_string
 import os
-from PIL import Image
-import numpy as np
-from fpdf import FPDF
-import tempfile
+import shutil
+import time
+from flask import Flask, request, render_template, send_file, redirect, url_for
+from werkzeug.utils import secure_filename
+from image_processing import create_sorted_pdf
 
 app = Flask(__name__)
+UPLOAD_FOLDER = 'uploaded_images'  # directory to store uploaded images
+OUTPUT_PDF = 'sorted_images.pdf'   # output PDF file name
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}  # allowed image file extensions
 
-def calculate_brightness(image):
-    grayscale_image = image.convert('L')
-    np_image = np.array(grayscale_image)
-    return np.mean(np_image)
+# function to check if the uploaded file has an allowed extension
+def allowed_file(filename):
+    # check if the filename has an extension and if it is in the allowed extensions set
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def calculate_saturation(image):
-    hsv_image = image.convert('HSV')
-    np_image = np.array(hsv_image)
-    saturation = np_image[:, :, 1]
-    return np.mean(saturation)
-
-def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness', max_width=200, max_height=200):
-    images = []
-    for filename in os.listdir(image_folder):
-        if filename.lower().endswith(('png', 'jpg', 'jpeg')):
-            image_path = os.path.join(image_folder, filename)
-            try:
-                image = Image.open(image_path)
-                
-                if sort_by == 'brightness':
-                    metric = calculate_brightness(image)
-                elif sort_by == 'saturation':
-                    metric = calculate_saturation(image)
-                
-                images.append((metric, image_path))
-            except (IOError, FileNotFoundError):
-                print(f"Skipped invalid file: {filename}")
-
-    if not images:
-        print("No valid images found.")
-        return
-
-    images.sort(reverse=True, key=lambda x: x[0])
-
-    pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=5)
-    pdf.add_page()
-
-    margin = 1
-    y_offset = margin
-
-    for i, (metric, image_path) in enumerate(images):
-        image = Image.open(image_path)
-        original_width, original_height = image.size
-        
-        scale = min(max_width / original_width, max_height / original_height)
-        new_width = int(original_width * scale)
-        new_height = int(original_height * scale)
-
-        page_width = pdf.w - 2 * margin
-        x_offset = (page_width - new_width) / 2
-
-        if y_offset + new_height > pdf.page_break_trigger - 5:
-            pdf.add_page()
-            y_offset = margin
-
-        pdf.image(image_path, x=x_offset, y=y_offset, w=new_width, h=new_height)
-        
-        y_offset += new_height + margin
-
-    pdf.output(output_pdf)
-
-@app.route('/')
+# route for the main page
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template_string(open('index.html').read())
+    pdf_ready = False  # variable to track if the PDF is ready for download
+    pdf_url = None  # URL for the generated PDF file
 
-@app.route('/upload', methods=['POST'])
-def upload_files():
-    if 'images' not in request.files:
-        return "No file part"
-    
-    images = request.files.getlist('images')
-    sort_by = request.form.get('sort_by', 'brightness')
+    if request.method == 'POST':
+        # create the upload directory if it doesn't exist
+        if not os.path.exists(UPLOAD_FOLDER):
+            os.makedirs(UPLOAD_FOLDER)
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        for img in images:
-            img.save(os.path.join(temp_dir, img.filename))
+        # check if the 'images_folder' is in the request files
+        if 'images_folder' not in request.files:
+            return "Error: No files selected", 400
 
-        output_pdf = os.path.join(temp_dir, 'sorted_images.pdf')
-        create_sorted_pdf(temp_dir, output_pdf, sort_by=sort_by)
+        # saving multiple files uploaded by the user
+        files = request.files.getlist('images_folder')
+        if not files:
+            return "Error: No files selected", 400
+        
+        # iterate over the uploaded files and save them
+        for file in files:
+            if file and allowed_file(file.filename): 
+                filename = secure_filename(file.filename)  # secure the filename
+                file_path = os.path.join(UPLOAD_FOLDER, filename)  # create full file path
+                file.save(file_path)  # save the file to the upload folder
+                print(f"Saved file: {file_path}") 
+        
+        # check the selected sorting method
+        sort_by = request.form.get('sort_by', 'brightness')
+        
+        try:
+            print("Creating PDF...") 
+            # call the function to create the sorted PDF from uploaded images
+            create_sorted_pdf(UPLOAD_FOLDER, OUTPUT_PDF, sort_by=sort_by)
+            print(f"PDF created at: {os.path.abspath(OUTPUT_PDF)}")  # debug message
+            pdf_ready = True
+            pdf_url = url_for('download_file')  # get the URL for downloading the PDF
+        except Exception as e:
+            return f"Error creating PDF: {str(e)}", 500  # return error if PDF creation fails
 
-        return send_file(output_pdf, as_attachment=True, download_name='sorted_images.pdf')
+    return render_template('index.html', pdf_ready=pdf_ready, pdf_url=pdf_url)
 
-if __name__ == "__main__":
+# route for downloading the generated PDF
+@app.route('/download')
+def download_file():
+    # wait a moment to ensure the file is fully written
+    time.sleep(1)
+
+    # check if the PDF file exists
+    if os.path.exists(OUTPUT_PDF):
+        print("PDF exists and ready for download")  # debug message
+        
+        # after download, delete temporary files
+        if os.path.exists(UPLOAD_FOLDER):
+            shutil.rmtree(UPLOAD_FOLDER)  # remove the directory with uploaded images
+            print(f"Temporary files deleted: {UPLOAD_FOLDER}")  # debug message
+
+        # send the PDF file as an attachment to the user
+        return send_file(OUTPUT_PDF, as_attachment=True)
+    else:
+        print("PDF file not found") 
+        return "File not found", 404 
+
+# main entry point for the application
+if __name__ == '__main__':
     app.run(debug=True)

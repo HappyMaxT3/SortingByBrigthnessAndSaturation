@@ -2,22 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sort Images and Create PDF</title>
+    <title>Upload Images</title>
 </head>
 <body>
-    <h2>Upload Images Folder</h2>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <label for="images">Select images to upload:</label>
-        <input type="file" id="images" name="images" multiple webkitdirectory directory>
+    <h1>Upload Images</h1>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <input type="file" name="images_folder" multiple>
         <br><br>
         <label for="sort_by">Sort by:</label>
-        <select id="sort_by" name="sort_by">
+        <select name="sort_by">
             <option value="brightness">Brightness</option>
             <option value="saturation">Saturation</option>
         </select>
         <br><br>
         <button type="submit">Upload and Create PDF</button>
     </form>
+
+    {% if pdf_ready %}
+        <h2>Your PDF is ready!</h2>
+        <a href="{{ pdf_url }}" class="btn btn-primary" download>Download PDF</a>
+    {% endif %}
 </body>
 </html>

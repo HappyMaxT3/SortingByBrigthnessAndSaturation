@@ -3,17 +3,20 @@ from PIL import Image
 import numpy as np
 from fpdf import FPDF
 
+# function to calculate the brightness of an image
 def calculate_brightness(image):
-    grayscale_image = image.convert('L') # image in gray
-    np_image = np.array(grayscale_image) # convert to massive
-    return np.mean(np_image) # return brightness
+    grayscale_image = image.convert('L')
+    np_image = np.array(grayscale_image)
+    return np.mean(np_image)
 
+# function to calculate the saturation of an image
 def calculate_saturation(image):
-    hsv_image = image.convert('HSV') # convert to HSV model
+    hsv_image = image.convert('HSV')
     np_image = np.array(hsv_image)
-    saturation = np_image[:, :, 1] # convert to massive
+    saturation = np_image[:, :, 1]
     return np.mean(saturation)
 
+# function to create a sorted PDF from images based on brightness or saturation
 def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness', max_width=200, max_height=200):
     images = []
     for filename in os.listdir(image_folder):
@@ -60,11 +63,3 @@ def create_sorted_pdf(image_folder, output_pdf, sort_by='brightness', max_width=
         y_offset += new_height + margin
 
     pdf.output(output_pdf)
-
-image_folder = 'images_folder'  
-output_pdf = 'sorted_images.pdf'
-
-sort_by = input("Choose sort parameter (brightness/saturation): ").strip().lower()
-
-create_sorted_pdf(image_folder, output_pdf, sort_by=sort_by)
-
