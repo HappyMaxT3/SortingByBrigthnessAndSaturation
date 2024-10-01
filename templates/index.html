@@ -36,8 +36,16 @@
 
 
     {% if pdf_ready %}
-        <h2>Your PDF is ready!</h2>
-        <a href="{{ pdf_url }}" class="btn btn-primary" download>Download PDF</a>
-    {% endif %}
+    <div class="pdfReadyContainer">
+        <div class="pdfImageContainer">
+            <img src="../static/images/299x.gif" alt="second_skeleton" class="pdfIcon">
+        </div>
+        <div class="pdfTextContainer">
+            <h2>Your PDF is ready!</h2>
+            <a href="{{ pdf_url }}" class="btn btn-primary" download>Download PDF</a>
+        </div>
+    </div>
+{% endif %}
+
 </body>
 </html>
