@@ -1,0 +1,71 @@
+@font-face {
+    font-family: 'agat-8'; 
+    src: url('../fonts/agat-8.ttf');
+}
+
+.bodyStyle{
+    background-color: #D5B595;
+    font-family: 'agat-8', sans-serif; 
+
+}
+
+.hrefStyleChoose{
+    font-size: 45px;
+    background-color: #D69A5A;
+    padding: 10px;
+    border: #181719 solid 3px;
+    border-radius: 10px;
+
+    display: block;
+    margin: auto;
+
+    margin-top: 1%;
+    margin-left: 1%;
+}
+
+.hrefStyleSupports {
+    font-size: 18px;
+    text-align: center;
+
+    display: block; 
+    margin-top: 1%;
+}
+
+.formAndGifContainer {
+    display: flex;              
+    align-items: center;        
+    justify-content: center;    
+    margin: 20px auto;
+    padding: 20px;   
+
+    border: #181719 solid 3px; 
+    border-radius: 10px; 
+
+    min-width: 450px;  
+    width: 50%;    
+    box-sizing: border-box; 
+    background-color: #D69A5A;
+}
+
+.formStyle {
+    padding: 10px;
+    border: #181719 solid 3px;
+    border-radius: 10px;
+
+    margin-top: 15%;
+}
+
+.gifStyle img {
+    border: #181719 solid 3px;
+    background-color: #D5B595;
+    border-radius: 10px;
+
+    max-width: 100%;
+    min-width: 120px;         
+    height: auto;            
+    max-height: 300px;  
+    
+    margin-left: 3%;
+}
+
+

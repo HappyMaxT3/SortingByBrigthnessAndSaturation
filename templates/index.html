@@ -4,21 +4,36 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Images</title>
+    <link rel="stylesheet" href="../static/css/styles.css"> 
+    <title>Sorting By Brightness and Saturation</title>
 </head>
-<body>
-    <h1>Upload Images</h1>
-    <form action="/" method="POST" enctype="multipart/form-data">
-        <input type="file" name="images_folder" multiple>
-        <br><br>
-        <label for="sort_by">Sort by:</label>
-        <select name="sort_by">
-            <option value="brightness">Brightness</option>
-            <option value="saturation">Saturation</option>
-        </select>
-        <br><br>
-        <button type="submit">Upload and Create PDF</button>
-    </form>
+<body class="bodyStyle">
+    <h1 class="hrefStyleChoose">Choose some files to sorting by Brightness or Saturation!</h1>
+
+    <div class="formAndGifContainer">
+        <div>
+            <text class="hrefStyleSupports">[App supports only '.pnd', '.jpg' and '.jpeg']</text>
+            <div class="formStyle">
+                <form action="/" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="images_folder" multiple>
+                    <br><br>
+                    <label for="sort_by">Sort by...</label>
+                    <select name="sort_by">
+                        <option value="brightness">Brightness</option>
+                        <option value="saturation">Saturation</option>
+                    </select>
+                    <br><br>
+                    <button type="submit">Upload and Create PDF</button>
+                </form>
+            </div>
+        </div>
+    
+        <div class="gifStyle">
+            <img src="../static/images/angry_skeleton.gif" alt="angry_skeleton">
+        </div>
+    </div>
+
+
 
     {% if pdf_ready %}
         <h2>Your PDF is ready!</h2>
