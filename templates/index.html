@@ -13,6 +13,7 @@
     <div class="formAndGifContainer">
         <div>
             <text class="hrefStyleSupports">[App supports only '.pnd', '.jpg' and '.jpeg']</text>
+
             <div class="formStyle">
                 <form action="/" method="POST" enctype="multipart/form-data">
                     <input type="file" name="images_folder" multiple class="chooseFilesButt">
@@ -26,16 +27,17 @@
                     <button type="submit" class="uploadButt">Upload and Create PDF</button>
                 </form>
             </div>
+            
         </div>
     
         <div class="gifStyle">
             <img src="../static/images/angry_skeleton.gif" alt="skeleton">
         </div>
+
     </div>
 
+{% if pdf_ready %}
 
-
-    {% if pdf_ready %}
     <div class="pdfReadyContainer">
         <div class="pdfImageContainer">
             <img src="../static/images/299x.gif" alt="skeleton" class="pdfIcon">
@@ -48,6 +50,7 @@
             <img src="../static/images/4hss.gif" alt="skeleton" class="pdfIcon">
         </div>
     </div>
+
     <div class="pdfPreview">
         <h3 style="text-align: left; size: 30px;">Preview PDF:</h3>
         <iframe src="{{ pdf_preview_url }}" class="PDF"></iframe>
@@ -57,6 +60,7 @@
 
 </body>
 <footer>
+
     <div class="footerContainer">
         <div class="footerText">
             <h1>Info:</h1>
@@ -67,10 +71,12 @@
             <br>
             <p>Contact mail: mstolmachev@edu.hse.ru</p>
         </div>
+
         <div class="footerImage">
             <img src="../static/images/O9Ev.gif" alt="skeleton" class="pdfIcon">
         </div>
     </div>
+
 </footer>
 
 </html>

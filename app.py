@@ -1,6 +1,5 @@
 import os
 import shutil
-import time
 from flask import Flask, request, render_template, send_file, url_for
 from werkzeug.utils import secure_filename
 from image_processing import create_sorted_pdf
@@ -28,8 +27,8 @@ def clear_temporary_files():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     pdf_ready = False  # variable to track if the PDF is ready for download
-    pdf_url = None  # URL for the generated PDF file
-    pdf_preview_url = None  # URL for PDF preview
+    pdf_url = None  
+    pdf_preview_url = None 
 
     if request.method == 'POST':
         # create the static and upload directories if they don't exist
