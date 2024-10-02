@@ -1,92 +1,152 @@
-# SortingByBrigthnessAndSaturation_GITLAB
 
+# Sorting Images by Brightness and Saturation
 
+This project is a web application built with Flask that allows users to upload images, sort them by brightness or saturation, and generate a previewable and downloadable PDF file of sorted images. The site also provides a preview of the generated PDF before download.
 
-## Getting started
+## Features
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- Upload multiple images
+- Sort images by brightness or saturation
+- Generate a PDF with the sorted images
+- Preview the generated PDF in the browser
+- Download or print the PDF file
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Prerequisites
 
-## Add your files
+- Python 3.x
+- Flask
+- Docker (optional, for containerized deployment)
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Setup Instructions
 
+### 1. Cloning the Repository
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://git.miem.hse.ru/mstolmachev/sortingbybrigthnessandsaturation_gitlab.git
 ```
-cd existing_repo
-git remote add origin https://git.miem.hse.ru/mstolmachev/sortingbybrigthnessandsaturation_gitlab.git
-git branch -M master
-git push -uf origin master
+
+### 2. Creating and Activating a Virtual Environment
+
+To prevent dependency conflicts, it's recommended to use a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On macOS/Linux
+# OR
+venv\Scripts\activate  # On Windows
 ```
 
-## Integrate with your tools
+### 3. Installing Dependencies
 
-- [ ] [Set up project integrations](https://git.miem.hse.ru/mstolmachev/sortingbybrigthnessandsaturation_gitlab/-/settings/integrations)
+Install the necessary dependencies from the `requirements.txt` file:
 
-## Collaborate with your team
+```bash
+pip install -r requirements.txt
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### 4. Running the Application
 
-## Test and Deploy
+Once the dependencies are installed, you can run the application using Flask:
 
-Use the built-in continuous integration in GitLab.
+```bash
+export FLASK_APP=app.py
+export FLASK_ENV=development  # Optional for debug mode
+flask run
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Alternatively, on Windows:
 
-***
+```bash
+set FLASK_APP=app.py
+flask run
+```
 
-# Editing this README
+The application will be available at `http://127.0.0.1:8000/`.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## 5. Functionalities of the Application
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- **Upload Images**: Users can upload multiple image files (allowed extensions: `.png`, `.jpg`, `.jpeg`).
+- **Sorting Options**: Users can sort the images based on brightness or saturation.
+- **PDF Generation**: After sorting, the images are compiled into a PDF that can be previewed in the browser.
+- **Preview and Download**: Users can preview the generated PDF and download it if necessary.
 
-## Name
-Choose a self-explaining name for your project.
+## 6. Project Structure
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```bash
+sorting-images/
+│
+├── app.py                        # Main Flask application
+├── image_processing.py           # Image processing and PDF generation logic
+├── static/                       # Static files like CSS and images
+│   ├── uploaded_images/          # Temporary folder for uploaded images
+|   ├── css/styles.css            # Styles for HTML page
+|   ├── images/                   # GIFs for HTML page
+|   ├── fonts/                    # GIFs for HTML page
+│   └── sorted_images.pdf         # Generated output PDF file
+│
+├── templates/                    # HTML templates for rendering pages
+│   └── index.html                # Main page for uploading images and displaying the PDF preview
+│
+├── requirements.txt              # Python package dependencies
+└── README.md                     # Project documentation
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### 7. Code Overview
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+#### app.py
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+- **Flask Application**: The main application that handles routes, file uploads, and PDF generation.
+- **Routes**:
+  - `/`: Handles the main page for uploading images and sorting them.
+  - `/download`: Handles the download of the generated PDF file.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+#### image_processing.py
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+- **Functions**:
+  - `create_sorted_pdf(upload_folder, output_pdf, sort_by)`: Processes uploaded images, sorts them based on the specified criterion (brightness or saturation), and generates a PDF.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+### 8. Building and Running with Docker
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+#### Building the Docker Image:
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+To build a Docker image for the application, run the following command:
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+```bash
+docker build -t sorting-images .
+```
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+#### Running the Application in Docker:
 
-## License
-For open source projects, say how it is licensed.
+To run the application using Docker, execute:
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+```bash
+docker run -d -p 8000:8000 sorting-images
+```
+
+### 9. Pushing the Docker Image to a Repository:
+
+To push the Docker image to a repository (e.g., Docker Hub), follow these steps:
+
+1. Log in to Docker Hub:
+
+```bash
+docker login
+```
+
+2. Tag your image:
+
+```bash
+docker tag sorting-images your-username/sorting-images:latest
+```
+
+3. Push the image:
+
+```bash
+docker push your-username/sorting-images:latest
+```
+
+## Conclusion
+
+This web application provides a simple interface for sorting images by brightness or saturation and generating a PDF. With the added functionality of Docker, it can easily be deployed in various environments. Directed by the marvelous Max Tolmachev, a big fan of brutal skeletons, rum, video games and programming.
