@@ -72,6 +72,9 @@ def download_file():
         if os.path.exists(UPLOAD_FOLDER):
             shutil.rmtree(UPLOAD_FOLDER)  # remove the directory with uploaded images
             print(f"Temporary files deleted: {UPLOAD_FOLDER}")  # debug message
+        if os.path.exists(OUTPUT_PDF):
+            os.remove(OUTPUT_PDF)
+            print(f"Output file deleted: {UPLOAD_FOLDER}")
 
         # send the PDF file as an attachment to the user
         return send_file(OUTPUT_PDF, as_attachment=True)
@@ -81,4 +84,4 @@ def download_file():
 
 # main entry point for the application
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8000, debug=True)
