@@ -64,6 +64,8 @@ def download_file():
     # wait a moment to ensure the file is fully written
     time.sleep(1)
 
+    output_pdf_path = OUTPUT_PDF
+
     # check if the PDF file exists
     if os.path.exists(OUTPUT_PDF):
         print("PDF exists and ready for download")  # debug message
@@ -72,12 +74,15 @@ def download_file():
         if os.path.exists(UPLOAD_FOLDER):
             shutil.rmtree(UPLOAD_FOLDER)  # remove the directory with uploaded images
             print(f"Temporary files deleted: {UPLOAD_FOLDER}")  # debug message
-        if os.path.exists(OUTPUT_PDF):
-            os.remove(OUTPUT_PDF)
-            print(f"Output file deleted: {UPLOAD_FOLDER}")
+
+        response = send_file(output_pdf_path, as_attachment=True)
+
+        if os.path.exists(output_pdf_path):
+            os.remove(output_pdf_path)
+            print(f"Output file deleted: {output_pdf_path}")
 
         # send the PDF file as an attachment to the user
-        return send_file(OUTPUT_PDF, as_attachment=True)
+        return response
     else:
         print("PDF file not found") 
         return "File not found", 404 
