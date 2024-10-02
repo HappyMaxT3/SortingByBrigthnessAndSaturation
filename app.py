@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 from image_processing import create_sorted_pdf
 
 app = Flask(__name__)
-STATIC_FOLDER = 'static'  # static directory to store temporary files
+STATIC_FOLDER = 'static'  # static directory to store temporary files (Flask troubles)
 UPLOAD_FOLDER = os.path.join(STATIC_FOLDER, 'uploaded_images')  # directory to store uploaded images
 OUTPUT_PDF = os.path.join(STATIC_FOLDER, 'sorted_images.pdf')   # output PDF file path
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}  # allowed image file extensions

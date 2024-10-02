@@ -42,7 +42,7 @@
     border-radius: 10px; 
 
     min-width: 480px;  
-    width: 52%;    
+    width: 55%;    
     box-sizing: border-box; 
     background-color: #D69A5A;
 }
@@ -51,6 +51,7 @@
     padding: 10px;
     border: #181719 solid 3px;
     border-radius: 10px;
+    background-color: #D69A5A;
 
     margin-top: 15%;
 }
@@ -78,8 +79,8 @@
     border: #181719 solid 3px; 
     border-radius: 10px; 
 
-    min-width: 300px;  
-    width: 40%;    
+    min-width: 480px;  
+    width: 55%;    
     box-sizing: border-box; 
     background-color: #D69A5A;
 }
@@ -135,8 +136,7 @@
 }
 
 .pdfTextContainer{
-    text-align: left;  
-    margin-left: 10%;         
+    text-align: center;          
 }
 
 .pdfTextContainer h2{
@@ -145,7 +145,7 @@
 
 .pdfTextContainer .btn{
     display: inline-block;       
-    margin-top: 5px;             
+    margin-top: 3%;             
     padding: 5px 10px;
     min-width: 45px;
 
@@ -180,6 +180,36 @@
     border: #181719 solid 5px;
     border-radius: 10px;
 }
+
+.footerContainer{
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;  
+    margin: 20px auto;
+    padding: 20px;
+    border: #181719 solid 3px;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #D69A5A;
+}
+
+.footerText{
+    flex: 1; 
+    padding-right: 20px;  
+}
+
+.footerImage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footerImage img{
+    max-width: 250px; 
+    height: auto;
+}
+
 
 
 

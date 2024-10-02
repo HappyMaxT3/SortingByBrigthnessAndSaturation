@@ -29,7 +29,7 @@
         </div>
     
         <div class="gifStyle">
-            <img src="../static/images/angry_skeleton.gif" alt="angry_skeleton">
+            <img src="../static/images/angry_skeleton.gif" alt="skeleton">
         </div>
     </div>
 
@@ -38,11 +38,14 @@
     {% if pdf_ready %}
     <div class="pdfReadyContainer">
         <div class="pdfImageContainer">
-            <img src="../static/images/299x.gif" alt="second_skeleton" class="pdfIcon">
+            <img src="../static/images/299x.gif" alt="skeleton" class="pdfIcon">
         </div>
         <div class="pdfTextContainer">
-            <h2>Your PDF is ready!</h2>
+            <h2>Your sorted PDF is ready!</h2>
             <a href="{{ pdf_url }}" class="btn btn-primary" download>Download PDF</a>
+        </div>
+        <div class="pdfImageContainer">
+            <img src="../static/images/4hss.gif" alt="skeleton" class="pdfIcon">
         </div>
     </div>
     <div class="pdfPreview">
@@ -53,4 +56,21 @@
 {% endif %}
 
 </body>
+<footer>
+    <div class="footerContainer">
+        <div class="footerText">
+            <h1>Info:</h1>
+            <p>On this page you can sort your images by brightness or saturation and compile it into one PDF file.</p>
+            <p>The site has a preview of the finished PDF file and the ability to download or print it, work in a standard PDF window.</p>
+            <br>
+            <p>This cool site was created by the marvelous Max Tolmachev, a big fan of brutal skeletons, rum, video games, and programming.</p>
+            <br>
+            <p>Contact mail: mstolmachev@edu.hse.ru</p>
+        </div>
+        <div class="footerImage">
+            <img src="../static/images/O9Ev.gif" alt="skeleton" class="pdfIcon">
+        </div>
+    </div>
+</footer>
+
 </html>
