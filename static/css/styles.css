@@ -41,7 +41,7 @@
     border: #181719 solid 3px; 
     border-radius: 10px; 
 
-    min-width: 450px;  
+    min-width: 480px;  
     width: 52%;    
     box-sizing: border-box; 
     background-color: #D69A5A;
@@ -84,6 +84,41 @@
     background-color: #D69A5A;
 }
 
+.chooseFilesButt{
+    font-family: 'agat-8', sans-serif; 
+    color: #181719;
+
+    padding: 5px;
+    background-color: #D5B595;
+    border-radius: 5px;
+
+    border: none;
+}
+
+.sortByButt{
+    font-family: 'agat-8', sans-serif; 
+    color: #181719;
+
+    padding: 5px;
+    background-color: #D5B595;
+    border-radius: 5px;
+
+    border: none;
+}
+
+.uploadButt{
+    font-family: 'agat-8', sans-serif; 
+
+    background-color: #143b64;  
+    color: #fff;
+            
+    padding: 5px 10px;
+    min-width: 45px;
+    
+    text-decoration: none;  
+    border-radius: 5px; 
+}
+
 .pdfImageContainer{
     margin-right: 15px;       
 }
@@ -119,6 +154,31 @@
 
     text-decoration: none;      
     border-radius: 5px;    
+}
+
+.pdfPreview{
+    display: flex;              
+    align-items: center;        
+    justify-content: center;    
+    margin: 20px auto;
+    padding: 20px;   
+
+    border: #181719 solid 3px; 
+    border-radius: 10px; 
+
+    min-width: 400px;  
+    width: 72%;    
+    box-sizing: border-box; 
+    background-color: #D69A5A;
+}
+
+.PDF{
+    width: 88%;
+    min-width: 300px;
+    min-height: 500px;
+
+    border: #181719 solid 5px;
+    border-radius: 10px;
 }
 
 

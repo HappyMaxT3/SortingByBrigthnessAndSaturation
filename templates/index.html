@@ -15,15 +15,15 @@
             <text class="hrefStyleSupports">[App supports only '.pnd', '.jpg' and '.jpeg']</text>
             <div class="formStyle">
                 <form action="/" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="images_folder" multiple>
+                    <input type="file" name="images_folder" multiple class="chooseFilesButt">
                     <br><br>
                     <label for="sort_by">Sort by...</label>
-                    <select name="sort_by">
-                        <option value="brightness">Brightness</option>
-                        <option value="saturation">Saturation</option>
+                    <select name="sort_by" class="sortByButt">
+                        <option value="brightness">brightness</option>
+                        <option value="saturation">saturation</option>
                     </select>
                     <br><br>
-                    <button type="submit">Upload and Create PDF</button>
+                    <button type="submit" class="uploadButt">Upload and Create PDF</button>
                 </form>
             </div>
         </div>
@@ -45,6 +45,11 @@
             <a href="{{ pdf_url }}" class="btn btn-primary" download>Download PDF</a>
         </div>
     </div>
+    <div class="pdfPreview">
+        <h3 style="text-align: left; size: 30px;">Preview PDF:</h3>
+        <iframe src="{{ pdf_preview_url }}" class="PDF"></iframe>
+    </div>
+
 {% endif %}
 
 </body>
